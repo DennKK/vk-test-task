@@ -55,9 +55,9 @@ public class DefaultPostProxyService implements PostsProxyService {
     }
 
     @Override
-    public PostDto updatePost(IncomingPostDto postDto) {
+    public PostDto updatePost(Long id, IncomingPostDto postDto) {
         return webClient.put()
-                .uri(POSTS_PREFIX)
+                .uri(POSTS_PREFIX + FORWARD_SLASH + id)
                 .bodyValue(postDto)
                 .retrieve()
                 .bodyToMono(PostDto.class)

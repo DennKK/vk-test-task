@@ -49,10 +49,10 @@ public class PostsProxyController {
         return postsProxyService.createPost(incomingPostDto);
     }
 
-    @PutMapping
+    @PutMapping("/{postId}")
     @Operation(summary = "Update post", description = "Update post by its id")
-    public PostDto updatePost(@RequestBody IncomingPostDto incomingPostDto) {
-        return postsProxyService.updatePost(incomingPostDto);
+    public PostDto updatePost(@PathVariable Long postId, @RequestBody IncomingPostDto incomingPostDto) {
+        return postsProxyService.updatePost(postId, incomingPostDto);
     }
 
     @DeleteMapping("/{postId}")
