@@ -16,4 +16,6 @@ public interface PostsProxyService {
     PostDto createPost(IncomingPostDto incomingPostDto);
 
     PostDto updatePost(IncomingPostDto incomingPostDto);
+
+    void deletePost(Long id);
 }

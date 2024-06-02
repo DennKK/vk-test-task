@@ -7,6 +7,7 @@ import org.dkcorp.vktesttask.dto.CommentDto;
 import org.dkcorp.vktesttask.dto.IncomingPostDto;
 import org.dkcorp.vktesttask.dto.PostDto;
 import org.dkcorp.vktesttask.service.PostsProxyService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,5 +53,11 @@ public class PostsProxyController {
     @Operation(summary = "Update post", description = "Update post by its id")
     public PostDto updatePost(@RequestBody IncomingPostDto incomingPostDto) {
         return postsProxyService.updatePost(incomingPostDto);
+    }
+
+    @DeleteMapping
+    @Operation(summary = "Delete post", description = "Delete post by its id")
+    public void deletePost(@PathVariable Long postId) {
+        postsProxyService.deletePost(postId);
     }
 }
