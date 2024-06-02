@@ -44,6 +44,12 @@
             <version>1.8.0</version>
         </dependency>
 
+        <!-- Webflux -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+            <version>6.1.8</version>
+        </dependency>
 
         <!-- Lombok -->
         <dependency>
