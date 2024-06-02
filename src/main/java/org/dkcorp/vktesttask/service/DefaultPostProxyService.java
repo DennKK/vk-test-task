@@ -13,11 +13,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DefaultPostProxyService implements PostsProxyService {
     private final WebClient webClient;
+    private final String POSTS_PREFIX = "/posts";
+    private final String FORWARD_SLASH = "/";
 
     @Override
     public List<PostDto> getAllPosts() {
         return webClient.get()
-                .uri("/posts")
+                .uri(POSTS_PREFIX)
                 .retrieve().bodyToFlux(PostDto.class)
                 .collectList()
                 .block();
@@ -26,7 +28,7 @@ public class DefaultPostProxyService implements PostsProxyService {
     @Override
     public PostDto getPostById(Long id) {
         return webClient.get()
-                .uri("/posts/" + id)
+                .uri(POSTS_PREFIX + FORWARD_SLASH + id)
                 .retrieve()
                 .bodyToMono(PostDto.class)
                 .block();
@@ -35,7 +37,7 @@ public class DefaultPostProxyService implements PostsProxyService {
     @Override
     public List<CommentDto> getPostComments(Long id) {
         return webClient.get()
-                .uri("/posts/" + id + "/comments").
+                .uri(POSTS_PREFIX + FORWARD_SLASH + id + "/comments").
                 retrieve()
                 .bodyToFlux(CommentDto.class)
                 .collectList()
@@ -45,7 +47,7 @@ public class DefaultPostProxyService implements PostsProxyService {
     @Override
     public PostDto createPost(IncomingPostDto incomingPostDto) {
         return webClient.post()
-                .uri("/posts")
+                .uri(POSTS_PREFIX)
                 .bodyValue(incomingPostDto)
                 .retrieve()
                 .bodyToMono(PostDto.class)
@@ -55,10 +57,19 @@ public class DefaultPostProxyService implements PostsProxyService {
     @Override
     public PostDto updatePost(IncomingPostDto postDto) {
         return webClient.put()
-                .uri("/posts")
+                .uri(POSTS_PREFIX)
                 .bodyValue(postDto)
                 .retrieve()
                 .bodyToMono(PostDto.class)
+                .block();
+    }
+
+    @Override
+    public void deletePost(Long id) {
+        webClient.delete()
+                .uri(POSTS_PREFIX + FORWARD_SLASH + id)
+                .retrieve()
+                .bodyToMono(Void.class)
                 .block();
     }
 }
