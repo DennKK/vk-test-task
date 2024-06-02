@@ -5,3 +5,8 @@ spring:
 remote:
   server:
     baseUrl: https://jsonplaceholder.typicode.com/
+
+springdoc:
+  swagger-ui:
+    path=/swagger-ui-custom:
+      html: /swagger-ui.html
