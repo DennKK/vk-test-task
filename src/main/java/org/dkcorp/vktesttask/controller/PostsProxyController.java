@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/posts")
+@RequestMapping("/api/posts")
 @Tag(name = "Posts", description = "Operations related to posts")
 public class PostsProxyController {
     private final PostsProxyService postsProxyService;
