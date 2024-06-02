@@ -51,4 +51,14 @@ public class DefaultPostProxyService implements PostsProxyService {
                 .bodyToMono(PostDto.class)
                 .block();
     }
+
+    @Override
+    public PostDto updatePost(IncomingPostDto postDto) {
+        return webClient.put()
+                .uri("/posts")
+                .bodyValue(postDto)
+                .retrieve()
+                .bodyToMono(PostDto.class)
+                .block();
+    }
 }
