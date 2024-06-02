@@ -10,6 +10,7 @@ import org.dkcorp.vktesttask.service.PostsProxyService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +25,7 @@ public class PostsProxyController {
     private final PostsProxyService postsProxyService;
 
     @GetMapping
-    @Operation(summary = "Fetch all posts", description = "Fetch all posts from service")
+    @Operation(summary = "Fetch all posts", description = "Fetch all posts from the server")
     public List<PostDto> getAllPosts() {
         return postsProxyService.getAllPosts();
     }
@@ -45,5 +46,11 @@ public class PostsProxyController {
     @Operation(summary = "Create post", description = "Create new post")
     public PostDto createPost(@RequestBody IncomingPostDto incomingPostDto) {
         return postsProxyService.createPost(incomingPostDto);
+    }
+
+    @PutMapping
+    @Operation(summary = "Update post", description = "Update post by its id")
+    public PostDto updatePost(@RequestBody IncomingPostDto incomingPostDto) {
+        return postsProxyService.updatePost(incomingPostDto);
     }
 }

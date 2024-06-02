@@ -13,5 +13,7 @@ public interface PostsProxyService {
 
     List<CommentDto> getPostComments(Long id);
 
-    PostDto createPost(IncomingPostDto postDto);
+    PostDto createPost(IncomingPostDto incomingPostDto);
+
+    PostDto updatePost(IncomingPostDto incomingPostDto);
 }
