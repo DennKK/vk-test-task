@@ -55,7 +55,7 @@ public class PostsProxyController {
         return postsProxyService.updatePost(incomingPostDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{postId}")
     @Operation(summary = "Delete post", description = "Delete post by its id")
     public void deletePost(@PathVariable Long postId) {
         postsProxyService.deletePost(postId);
