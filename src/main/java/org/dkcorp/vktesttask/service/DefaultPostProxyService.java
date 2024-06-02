@@ -2,6 +2,7 @@ package org.dkcorp.vktesttask.service;
 
 import lombok.RequiredArgsConstructor;
 import org.dkcorp.vktesttask.dto.CommentDto;
+import org.dkcorp.vktesttask.dto.IncomingPostDto;
 import org.dkcorp.vktesttask.dto.PostDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -38,6 +39,16 @@ public class DefaultPostProxyService implements PostsProxyService {
                 retrieve()
                 .bodyToFlux(CommentDto.class)
                 .collectList()
+                .block();
+    }
+
+    @Override
+    public PostDto createPost(IncomingPostDto incomingPostDto) {
+        return webClient.post()
+                .uri("/posts")
+                .bodyValue(incomingPostDto)
+                .retrieve()
+                .bodyToMono(PostDto.class)
                 .block();
     }
 }
