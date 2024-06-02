@@ -8,5 +8,4 @@ remote:
 
 springdoc:
   swagger-ui:
-    path=/swagger-ui-custom:
-      html: /swagger-ui.html
+    path: /swagger-ui.html
