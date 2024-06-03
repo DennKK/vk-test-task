@@ -1,8 +1,8 @@
 package org.dkcorp.vktesttask.service;
 
-import org.dkcorp.vktesttask.dto.AlbumDto;
-import org.dkcorp.vktesttask.dto.IncomingAlbumDto;
-import org.dkcorp.vktesttask.dto.PhotoDto;
+import org.dkcorp.vktesttask.dto.response.AlbumDto;
+import org.dkcorp.vktesttask.dto.request.IncomingAlbumDto;
+import org.dkcorp.vktesttask.dto.response.PhotoDto;
 
 import java.util.List;
 

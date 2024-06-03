@@ -1,9 +1,9 @@
 package org.dkcorp.vktesttask.service;
 
 import lombok.RequiredArgsConstructor;
-import org.dkcorp.vktesttask.dto.AlbumDto;
-import org.dkcorp.vktesttask.dto.IncomingAlbumDto;
-import org.dkcorp.vktesttask.dto.PhotoDto;
+import org.dkcorp.vktesttask.dto.response.AlbumDto;
+import org.dkcorp.vktesttask.dto.request.IncomingAlbumDto;
+import org.dkcorp.vktesttask.dto.response.PhotoDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
