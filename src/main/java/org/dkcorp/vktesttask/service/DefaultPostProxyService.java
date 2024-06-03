@@ -1,11 +1,15 @@
 package org.dkcorp.vktesttask.service;
 
 import lombok.RequiredArgsConstructor;
-import org.dkcorp.vktesttask.dto.response.CommentDto;
 import org.dkcorp.vktesttask.dto.request.IncomingPostDto;
+import org.dkcorp.vktesttask.dto.response.CommentDto;
 import org.dkcorp.vktesttask.dto.response.PostDto;
+import org.dkcorp.vktesttask.exception.CustomClientException;
+import org.dkcorp.vktesttask.exception.CustomServerException;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -20,7 +24,12 @@ public class DefaultPostProxyService implements PostsProxyService {
     public List<PostDto> getAllPosts() {
         return webClient.get()
                 .uri(POSTS_PREFIX)
-                .retrieve().bodyToFlux(PostDto.class)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                        Mono.error(new CustomClientException("Failed to retrieve posts: Client error")))
+                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                        Mono.error(new CustomServerException("Failed to retrieve posts: Server error")))
+                .bodyToFlux(PostDto.class)
                 .collectList()
                 .block();
     }
@@ -30,6 +39,10 @@ public class DefaultPostProxyService implements PostsProxyService {
         return webClient.get()
                 .uri(POSTS_PREFIX + FORWARD_SLASH + id)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                        Mono.error(new CustomClientException("Failed to retrieve post with id " + id + ": Client error")))
+                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                        Mono.error(new CustomServerException("Failed to retrieve post with id " + id + ": Server error")))
                 .bodyToMono(PostDto.class)
                 .block();
     }
@@ -37,8 +50,12 @@ public class DefaultPostProxyService implements PostsProxyService {
     @Override
     public List<CommentDto> getPostComments(Long id) {
         return webClient.get()
-                .uri(POSTS_PREFIX + FORWARD_SLASH + id + "/comments").
-                retrieve()
+                .uri(POSTS_PREFIX + FORWARD_SLASH + id + "/comments")
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                        Mono.error(new CustomClientException("Failed to retrieve comments for post with id " + id + ": Client error")))
+                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                        Mono.error(new CustomServerException("Failed to retrieve comments for post with id " + id + ": Server error")))
                 .bodyToFlux(CommentDto.class)
                 .collectList()
                 .block();
@@ -50,6 +67,10 @@ public class DefaultPostProxyService implements PostsProxyService {
                 .uri(POSTS_PREFIX)
                 .bodyValue(incomingPostDto)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                        Mono.error(new CustomClientException("Failed to create post: Client error")))
+                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                        Mono.error(new CustomServerException("Failed to create post: Server error")))
                 .bodyToMono(PostDto.class)
                 .block();
     }
@@ -60,6 +81,10 @@ public class DefaultPostProxyService implements PostsProxyService {
                 .uri(POSTS_PREFIX + FORWARD_SLASH + id)
                 .bodyValue(incomingPostDto)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                        Mono.error(new CustomClientException("Failed to update post with id " + id + ": Client error")))
+                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                        Mono.error(new CustomServerException("Failed to update post with id " + id + ": Server error")))
                 .bodyToMono(PostDto.class)
                 .block();
     }
@@ -69,6 +94,10 @@ public class DefaultPostProxyService implements PostsProxyService {
         webClient.delete()
                 .uri(POSTS_PREFIX + FORWARD_SLASH + id)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                        Mono.error(new CustomClientException("Failed to delete post with id " + id + ": Client error")))
+                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                        Mono.error(new CustomServerException("Failed to delete post with id " + id + ": Server error")))
                 .bodyToMono(Void.class)
                 .block();
     }
