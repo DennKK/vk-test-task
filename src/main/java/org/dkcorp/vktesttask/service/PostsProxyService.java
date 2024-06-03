@@ -1,8 +1,8 @@
 package org.dkcorp.vktesttask.service;
 
-import org.dkcorp.vktesttask.dto.CommentDto;
-import org.dkcorp.vktesttask.dto.IncomingPostDto;
-import org.dkcorp.vktesttask.dto.PostDto;
+import org.dkcorp.vktesttask.dto.response.CommentDto;
+import org.dkcorp.vktesttask.dto.request.IncomingPostDto;
+import org.dkcorp.vktesttask.dto.response.PostDto;
 
 import java.util.List;
 
