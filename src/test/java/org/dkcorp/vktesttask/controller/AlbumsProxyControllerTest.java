@@ -1,6 +1,7 @@
 package org.dkcorp.vktesttask.controller;
 
 import org.dkcorp.vktesttask.dto.request.IncomingAlbumDto;
+import org.dkcorp.vktesttask.dto.request.IncomingPhotoDto;
 import org.dkcorp.vktesttask.dto.response.AlbumDto;
 import org.dkcorp.vktesttask.dto.response.PhotoDto;
 import org.dkcorp.vktesttask.service.AlbumsProxyService;
@@ -89,10 +90,32 @@ public class AlbumsProxyControllerTest {
     }
 
     @Test
+    @DisplayName("POST /api/albums/{albumId}/photos creates new photo for album")
+    void handleAddAlbumPhoto_ReturnsValidResponseEntity() {
+        // given
+        IncomingPhotoDto incomingPhoto = new IncomingPhotoDto("Photo 1", "https://example.com/photo1", "https://example.com/photo1/thumbnail");
+        PhotoDto expectedPhoto = new PhotoDto(102L, 1L, "Photo 1", "https://example.com/photo1", "https://example.com/photo1/thumbnail");
+
+        doReturn(expectedPhoto).when(service).addAlbumPhoto(102L, incomingPhoto);
+
+        // when
+        PhotoDto actualPhoto = controller.addAlbumPhoto(102L, incomingPhoto);
+
+        // then
+        assertNotNull(actualPhoto);
+        assertEquals(expectedPhoto, actualPhoto);
+        ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<IncomingPhotoDto> dtoCaptor = ArgumentCaptor.forClass(IncomingPhotoDto.class);
+        verify(service, times(1)).addAlbumPhoto(idCaptor.capture(), dtoCaptor.capture());
+        assertEquals(102L, idCaptor.getValue());
+        assertEquals(incomingPhoto, dtoCaptor.getValue());
+    }
+
+    @Test
     @DisplayName("POST /api/albums creates new album")
     void handleCreateAlbum_ReturnsValidResponseEntity() {
         // given
-        IncomingAlbumDto incomingAlbum = new IncomingAlbumDto(1L, "The greatest album of all time!");
+        IncomingAlbumDto incomingAlbum = new IncomingAlbumDto("The greatest album of all time!");
         AlbumDto expectedAlbum = new AlbumDto(1L, 102L, "The greatest album of all time!");
 
         doReturn(expectedAlbum).when(service).createAlbum(incomingAlbum);
@@ -112,7 +135,7 @@ public class AlbumsProxyControllerTest {
     @DisplayName("PUT /api/albums/{albumId} updates album by id")
     void handleUpdateAlbum_ReturnsValidResponseEntity() {
         // given
-        IncomingAlbumDto incomingAlbum = new IncomingAlbumDto(1L, "The greatest album of all time!");
+        IncomingAlbumDto incomingAlbum = new IncomingAlbumDto("The greatest album of all time!");
         AlbumDto expectedAlbum = new AlbumDto(1L, 102L, "The greatest album of all time!");
 
         doReturn(expectedAlbum).when(service).updateAlbum(102L, incomingAlbum);
