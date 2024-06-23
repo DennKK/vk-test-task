@@ -6,4 +6,3 @@ public enum Role {
     ROLE_POSTS,
     ROLE_ALBUMS
 }
-
