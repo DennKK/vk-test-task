@@ -1,5 +1,6 @@
 package org.dkcorp.vktesttask.controller;
 
+import org.dkcorp.vktesttask.dto.request.IncomingCommentDto;
 import org.dkcorp.vktesttask.dto.request.IncomingPostDto;
 import org.dkcorp.vktesttask.dto.response.CommentDto;
 import org.dkcorp.vktesttask.dto.response.PostDto;
@@ -88,10 +89,31 @@ public class PostsProxyControllerTest {
     }
 
     @Test
+    @DisplayName("POST /api/posts/{postId}/comments creates new comment")
+    void handleAddPostComment_ReturnsValidResponseEntity() {
+        // given
+        CommentDto expectedComment = new CommentDto(102L, 1L, "Comment 1", "example@example.com", "Body of the comment1.");
+
+        doReturn(expectedComment).when(service).addPostComment(102L, new IncomingCommentDto("Comment 1", "example@example.com", "Body of the comment1."));
+
+        // when
+        CommentDto actualComment = controller.addPostComment(102L, new IncomingCommentDto("Comment 1", "example@example.com", "Body of the comment1."));
+
+        // then
+        assertNotNull(actualComment);
+        assertEquals(expectedComment, actualComment);
+        ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<IncomingCommentDto> dtoCaptor = ArgumentCaptor.forClass(IncomingCommentDto.class);
+        verify(service, times(1)).addPostComment(idCaptor.capture(), dtoCaptor.capture());
+        assertEquals(102L, idCaptor.getValue());
+        assertEquals(new IncomingCommentDto("Comment 1", "example@example.com", "Body of the comment1."), dtoCaptor.getValue());
+    }
+
+    @Test
     @DisplayName("POST /api/posts creates new post")
     void handleCreatePost_ReturnsValidResponseEntity() {
         // given
-        IncomingPostDto incomingPost = new IncomingPostDto(1L, "The greatest post of all time!", "Body of the post.");
+        IncomingPostDto incomingPost = new IncomingPostDto("The greatest post of all time!", "Body of the post.");
         PostDto expectedPost = new PostDto(1L, 102L, "The greatest post of all time!", "Body of the post.");
 
         doReturn(expectedPost).when(service).createPost(incomingPost);
@@ -111,7 +133,7 @@ public class PostsProxyControllerTest {
     @DisplayName("PUT /api/posts/{postId} updates post by id")
     void handleUpdatePost_ReturnsValidResponseEntity() {
         // given
-        IncomingPostDto incomingPost = new IncomingPostDto(1L, "The greatest post of all time!", "Body of the post.");
+        IncomingPostDto incomingPost = new IncomingPostDto("The greatest post of all time!", "Body of the post.");
         PostDto expectedPost = new PostDto(1L, 102L, "The greatest post of all time!", "Body of the post.");
 
         doReturn(expectedPost).when(service).updatePost(102L, incomingPost);
