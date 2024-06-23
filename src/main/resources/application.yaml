@@ -2,6 +2,24 @@ spring:
   application:
     name: vk-test-task
 
+  config:
+    import: file:env.properties
+
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    open-in-view: false
+
 remote:
   server:
     baseUrl: https://jsonplaceholder.typicode.com/

@@ -25,9 +25,9 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
         return webClient.get()
                 .uri(ALBUMS_PREFIX)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                .onStatus(HttpStatusCode::is4xxClientError, error ->
                         Mono.error(new CustomClientException("Failed to retrieve albums: Client error")))
-                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                .onStatus(HttpStatusCode::is5xxServerError, error ->
                         Mono.error(new CustomServerException("Failed to retrieve albums: Server error")))
                 .bodyToFlux(AlbumDto.class)
                 .collectList()
@@ -39,9 +39,9 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
         return webClient.get()
                 .uri(ALBUMS_PREFIX + FORWARD_SLASH + id)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                .onStatus(HttpStatusCode::is4xxClientError, error ->
                         Mono.error(new CustomClientException("Failed to retrieve album with id " + id + ": Client error")))
-                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                .onStatus(HttpStatusCode::is5xxServerError, error ->
                         Mono.error(new CustomServerException("Failed to retrieve album with id " + id + ": Server error")))
                 .bodyToMono(AlbumDto.class)
                 .block();
@@ -52,9 +52,9 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
         return webClient.get()
                 .uri(ALBUMS_PREFIX + FORWARD_SLASH + id + "/photos").
                 retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                .onStatus(HttpStatusCode::is4xxClientError, error ->
                         Mono.error(new CustomClientException("Failed to retrieve photos for album with id " + id + ": Client error")))
-                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                .onStatus(HttpStatusCode::is5xxServerError, error ->
                         Mono.error(new CustomServerException("Failed to retrieve photos for album with id " + id + ": Server error")))
                 .bodyToFlux(PhotoDto.class)
                 .collectList()
@@ -67,9 +67,9 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
                 .uri(ALBUMS_PREFIX)
                 .bodyValue(incomingAlbumDto)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                .onStatus(HttpStatusCode::is4xxClientError, error ->
                         Mono.error(new CustomClientException("Failed to create album: Client error")))
-                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                .onStatus(HttpStatusCode::is5xxServerError, error ->
                         Mono.error(new CustomServerException("Failed to create album: Server error")))
                 .bodyToMono(AlbumDto.class)
                 .block();
@@ -81,9 +81,9 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
                 .uri(ALBUMS_PREFIX + FORWARD_SLASH + id)
                 .bodyValue(incomingAlbumDto)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                .onStatus(HttpStatusCode::is4xxClientError, error ->
                         Mono.error(new CustomClientException("Failed to update album with id " + id + ": Client error")))
-                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                .onStatus(HttpStatusCode::is5xxServerError, error ->
                         Mono.error(new CustomServerException("Failed to update album with id " + id + ": Server error")))
                 .bodyToMono(AlbumDto.class)
                 .block();
@@ -94,9 +94,9 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
         webClient.delete()
                 .uri(ALBUMS_PREFIX + FORWARD_SLASH + id)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, _ ->
+                .onStatus(HttpStatusCode::is4xxClientError, error ->
                         Mono.error(new CustomClientException("Failed to delete album with id " + id + ": Client error")))
-                .onStatus(HttpStatusCode::is5xxServerError, _ ->
+                .onStatus(HttpStatusCode::is5xxServerError, error ->
                         Mono.error(new CustomServerException("Failed to delete album with id " + id + ": Server error")))
                 .bodyToMono(Void.class)
                 .block();
