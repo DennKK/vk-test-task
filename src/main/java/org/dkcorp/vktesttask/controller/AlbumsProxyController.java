@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.dkcorp.vktesttask.dto.request.IncomingAlbumDto;
+import org.dkcorp.vktesttask.dto.request.IncomingPhotoDto;
 import org.dkcorp.vktesttask.dto.response.AlbumDto;
 import org.dkcorp.vktesttask.dto.response.PhotoDto;
 import org.dkcorp.vktesttask.service.AlbumsProxyService;
@@ -43,6 +44,12 @@ public class AlbumsProxyController {
     @Operation(summary = "Fetch album photos", description = "Fetch all photos for the album")
     public List<PhotoDto> getAlbumPhotos(@PathVariable Long albumId) {
         return albumsProxyService.getAlbumPhotos(albumId);
+    }
+
+    @PostMapping("/{albumId}/photos")
+    @Operation(summary = "Add album photo", description = "Add new photo to the album")
+    public PhotoDto addAlbumPhoto(@PathVariable Long albumId, @RequestBody IncomingPhotoDto incomingPhotoDto) {
+        return albumsProxyService.addAlbumPhoto(albumId, incomingPhotoDto);
     }
 
     @PostMapping
