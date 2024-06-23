@@ -2,6 +2,7 @@ package org.dkcorp.vktesttask.service;
 
 import lombok.RequiredArgsConstructor;
 import org.dkcorp.vktesttask.dto.request.IncomingAlbumDto;
+import org.dkcorp.vktesttask.dto.request.IncomingPhotoDto;
 import org.dkcorp.vktesttask.dto.response.AlbumDto;
 import org.dkcorp.vktesttask.dto.response.PhotoDto;
 import org.dkcorp.vktesttask.exception.CustomClientException;
@@ -58,6 +59,20 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
                         Mono.error(new CustomServerException("Failed to retrieve photos for album with id " + id + ": Server error")))
                 .bodyToFlux(PhotoDto.class)
                 .collectList()
+                .block();
+    }
+
+    @Override
+    public PhotoDto addAlbumPhoto(Long id, IncomingPhotoDto incomingPhotoDto) {
+        return webClient.post()
+                .uri(ALBUMS_PREFIX + FORWARD_SLASH + id + "/photos")
+                .bodyValue(incomingPhotoDto)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, error ->
+                        Mono.error(new CustomClientException("Failed to add new photo for album with id " + id + ": Client error")))
+                .onStatus(HttpStatusCode::is5xxServerError, error ->
+                        Mono.error(new CustomServerException("Failed to add new photo for album with id " + id + ": Server error")))
+                .bodyToMono(PhotoDto.class)
                 .block();
     }
 
