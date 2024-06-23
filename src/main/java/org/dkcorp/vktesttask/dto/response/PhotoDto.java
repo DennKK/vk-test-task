@@ -1,4 +1,13 @@
 package org.dkcorp.vktesttask.dto.response;
 
-public record PhotoDto(Long albumId, Long id, String title, String url, String thumbnailUrl) {
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record PhotoDto(
+        Long albumId,
+        Long id,
+        String title,
+        String url,
+        String thumbnailUrl
+) {
 }
