@@ -3,6 +3,7 @@ package org.dkcorp.vktesttask.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.dkcorp.vktesttask.dto.request.IncomingCommentDto;
 import org.dkcorp.vktesttask.dto.request.IncomingPostDto;
 import org.dkcorp.vktesttask.dto.response.CommentDto;
 import org.dkcorp.vktesttask.dto.response.PostDto;
@@ -43,6 +44,12 @@ public class PostsProxyController {
     @Operation(summary = "Fetch post comments", description = "Fetch all comments for the post")
     public List<CommentDto> getPostComments(@PathVariable Long postId) {
         return postsProxyService.getPostComments(postId);
+    }
+
+    @PostMapping("/{postId}/comments")
+    @Operation(summary = "Add new comment", description = "Add new comment for the post")
+    public CommentDto addPostComment(@PathVariable Long postId, @RequestBody IncomingCommentDto incomingCommentDto) {
+        return postsProxyService.addPostComment(postId, incomingCommentDto);
     }
 
     @PostMapping

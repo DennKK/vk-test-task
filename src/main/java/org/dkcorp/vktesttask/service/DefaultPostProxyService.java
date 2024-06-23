@@ -1,6 +1,7 @@
 package org.dkcorp.vktesttask.service;
 
 import lombok.RequiredArgsConstructor;
+import org.dkcorp.vktesttask.dto.request.IncomingCommentDto;
 import org.dkcorp.vktesttask.dto.request.IncomingPostDto;
 import org.dkcorp.vktesttask.dto.response.CommentDto;
 import org.dkcorp.vktesttask.dto.response.PostDto;
@@ -58,6 +59,19 @@ public class DefaultPostProxyService implements PostsProxyService {
                         Mono.error(new CustomServerException("Failed to retrieve comments for post with id " + id + ": Server error")))
                 .bodyToFlux(CommentDto.class)
                 .collectList()
+                .block();
+    }
+
+    @Override
+    public CommentDto addPostComment(Long id, IncomingCommentDto incomingCommentDto) {
+        return webClient.get()
+                .uri(POSTS_PREFIX + FORWARD_SLASH + id + "/comments")
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, error ->
+                        Mono.error(new CustomClientException("Failed to create comment for the post with id " + id + ": Client error")))
+                .onStatus(HttpStatusCode::is5xxServerError, error ->
+                        Mono.error(new CustomServerException("Failed to create comment for the post with id " + id + ": Server error")))
+                .bodyToMono(CommentDto.class)
                 .block();
     }
 
