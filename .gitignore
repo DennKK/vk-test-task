@@ -111,3 +111,7 @@ nb-configuration.xml
 ## Miscellaneous
 ##############################
 *.log
+/env.properties
+/mvnw
+/mvnw.cmd
+/.mvn/wrapper/maven-wrapper.properties
