@@ -35,10 +35,13 @@ public class DefaultAuthService implements AuthService {
                 .username(request.username())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                // When registering a new user,
-                // he is automatically assigned the ADMIN role,
-                // this is necessary for DEMONSTRATION,
-                // as the api user is supposed to have all api capabilities
+
+                /*
+                 * When registering a new user,
+                 * he is automatically assigned the ADMIN role,
+                 * this is necessary for DEMONSTRATION,
+                 * as the api user is supposed to have all api capabilities
+                 */
                 .role(ROLE_ADMIN)
                 .build();
 
