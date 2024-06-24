@@ -20,6 +20,13 @@ spring:
     show-sql: true
     open-in-view: false
 
+  cache:
+    type: caffeine
+    cache-names:
+      albumsCache, postsCache, usersCache
+    caffeine:
+      spec: maximumSize=500, expireAfterAccess=5m
+
 remote:
   server:
     baseUrl: https://jsonplaceholder.typicode.com/
