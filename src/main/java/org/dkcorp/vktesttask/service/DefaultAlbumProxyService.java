@@ -7,6 +7,8 @@ import org.dkcorp.vktesttask.dto.response.AlbumDto;
 import org.dkcorp.vktesttask.dto.response.PhotoDto;
 import org.dkcorp.vktesttask.exception.CustomClientException;
 import org.dkcorp.vktesttask.exception.CustomServerException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,6 +24,7 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
     private final String FORWARD_SLASH = "/";
 
     @Override
+    @Cacheable(value = "albumsCache", key = "'allAlbums'")
     public List<AlbumDto> getAllAlbums() {
         return webClient.get()
                 .uri(ALBUMS_PREFIX)
@@ -36,6 +39,7 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
     }
 
     @Override
+    @Cacheable(value = "albumsCache", key = "'albumid:' + #id")
     public AlbumDto getAlbumById(Long id) {
         return webClient.get()
                 .uri(ALBUMS_PREFIX + FORWARD_SLASH + id)
@@ -49,6 +53,7 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
     }
 
     @Override
+    @Cacheable(value = "albumsCache", key = "'albumPhotos:' + #id")
     public List<PhotoDto> getAlbumPhotos(Long id) {
         return webClient.get()
                 .uri(ALBUMS_PREFIX + FORWARD_SLASH + id + "/photos").
@@ -63,6 +68,7 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
     }
 
     @Override
+    @CacheEvict(value = "albumsCache", allEntries = true)
     public PhotoDto addAlbumPhoto(Long id, IncomingPhotoDto incomingPhotoDto) {
         return webClient.post()
                 .uri(ALBUMS_PREFIX + FORWARD_SLASH + id + "/photos")
@@ -77,6 +83,7 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
     }
 
     @Override
+    @CacheEvict(value = "albumsCache", allEntries = true)
     public AlbumDto createAlbum(IncomingAlbumDto incomingAlbumDto) {
         return webClient.post()
                 .uri(ALBUMS_PREFIX)
@@ -91,6 +98,7 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
     }
 
     @Override
+    @CacheEvict(value = "albumsCache", allEntries = true)
     public AlbumDto updateAlbum(Long id, IncomingAlbumDto incomingAlbumDto) {
         return webClient.put()
                 .uri(ALBUMS_PREFIX + FORWARD_SLASH + id)
@@ -105,6 +113,7 @@ public class DefaultAlbumProxyService implements AlbumsProxyService {
     }
 
     @Override
+    @CacheEvict(value = "albumsCache", allEntries = true)
     public void deleteAlbum(Long id) {
         webClient.delete()
                 .uri(ALBUMS_PREFIX + FORWARD_SLASH + id)
