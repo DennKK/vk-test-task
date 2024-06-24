@@ -7,6 +7,8 @@ import org.dkcorp.vktesttask.dto.response.CommentDto;
 import org.dkcorp.vktesttask.dto.response.PostDto;
 import org.dkcorp.vktesttask.exception.CustomClientException;
 import org.dkcorp.vktesttask.exception.CustomServerException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,6 +24,7 @@ public class DefaultPostProxyService implements PostsProxyService {
     private final String FORWARD_SLASH = "/";
 
     @Override
+    @Cacheable(value = "postsCache", key = "'allPosts'")
     public List<PostDto> getAllPosts() {
         return webClient.get()
                 .uri(POSTS_PREFIX)
@@ -36,6 +39,7 @@ public class DefaultPostProxyService implements PostsProxyService {
     }
 
     @Override
+    @Cacheable(value = "postsCache", key = "'postid:' + #id")
     public PostDto getPostById(Long id) {
         return webClient.get()
                 .uri(POSTS_PREFIX + FORWARD_SLASH + id)
@@ -49,6 +53,7 @@ public class DefaultPostProxyService implements PostsProxyService {
     }
 
     @Override
+    @Cacheable(value = "postsCache", key = "'postComments:' + #id")
     public List<CommentDto> getPostComments(Long id) {
         return webClient.get()
                 .uri(POSTS_PREFIX + FORWARD_SLASH + id + "/comments")
@@ -63,8 +68,9 @@ public class DefaultPostProxyService implements PostsProxyService {
     }
 
     @Override
+    @CacheEvict(value = "postsCache", allEntries = true)
     public CommentDto addPostComment(Long id, IncomingCommentDto incomingCommentDto) {
-        return webClient.get()
+        return webClient.post()
                 .uri(POSTS_PREFIX + FORWARD_SLASH + id + "/comments")
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, error ->
@@ -76,6 +82,7 @@ public class DefaultPostProxyService implements PostsProxyService {
     }
 
     @Override
+    @CacheEvict(value = "postsCache", allEntries = true)
     public PostDto createPost(IncomingPostDto incomingPostDto) {
         return webClient.post()
                 .uri(POSTS_PREFIX)
@@ -90,6 +97,7 @@ public class DefaultPostProxyService implements PostsProxyService {
     }
 
     @Override
+    @CacheEvict(value = "postsCache", allEntries = true)
     public PostDto updatePost(Long id, IncomingPostDto incomingPostDto) {
         return webClient.put()
                 .uri(POSTS_PREFIX + FORWARD_SLASH + id)
@@ -104,6 +112,7 @@ public class DefaultPostProxyService implements PostsProxyService {
     }
 
     @Override
+    @CacheEvict(value = "postsCache", allEntries = true)
     public void deletePost(Long id) {
         webClient.delete()
                 .uri(POSTS_PREFIX + FORWARD_SLASH + id)

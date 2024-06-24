@@ -1,7 +1,9 @@
 package org.dkcorp.vktesttask.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record CommentDto(
         @Schema(description = "ID of the post this comment belongs to", example = "1")
         Long postId,
